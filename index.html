@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Portal de Usuario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="portal-container">
+        <div class="header">
+            Mini Portal de Usuario
+        </div>
+
+        <div class="form-card">
+            <h2>Registro de Usuario</h2>
+
+            <form id="userForm">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre">
+                <p class="error-message" id="errorNombre">El nombre es obligatorio.</p>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <p class="error-message" id="errorEmail">El email es obligatorio.</p>
+
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad">
+                <p class="error-message" id="errorEdad">La edad es obligatoria.</p>
+
+                <div class="buttons">
+                    <button type="submit" id="guardarBtn">Guardar</button>
+                    <button type="button" id="verDatosBtn">Ver Datos</button>
+                    <button type="button" id="limpiarFormBtn">Limpiar Formulario</button>
+                    <button type="button" id="borrarDatosBtn">Borrar datos</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="dataDisplay" class="data-display">
+            </div>
+    </div>
+    
+    <footer class="portal-footer">
+        <p>&copy; 2025 Mini Portal de Usuario. Todos los derechos reservados.</p>
+        <p>Desarrollado con Local Storage y JavaScript.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

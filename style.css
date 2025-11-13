@@ -1,0 +1,160 @@
+/* Paleta de Colores:
+   Azul Principal: #0D47A1
+   Azul Secundario: #42A5F5
+   Rojo Principal (Destructivo): #D32F2F
+   Rojo Secundario (Alerta): #F44336
+   Fondo: #ECEFF1
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ECEFF1; 
+    /* Ajustes para centrar el contenedor en el flujo normal (no flex) */
+    padding: 20px 0; 
+    margin: 0;
+    min-height: 100vh; /* Para que el footer se vea bien si hay poco contenido */
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido fluya verticalmente */
+    align-items: center; /* Centra el contenido en el eje horizontal */
+}
+
+.portal-container {
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px; /* Separación del footer */
+}
+
+/* --- ENCABEZADO (AZUL PRINCIPAL) --- */
+.header {
+    background-color: #0D47A1; 
+    color: white;
+    padding: 18px;
+    font-size: 1.6em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-card {
+    padding: 25px;
+}
+
+.form-card h2 {
+    color: #333;
+    border-bottom: 2px solid #42A5F5; 
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #0D47A1; 
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+/* --- ESTILOS DE ERROR (ROJO) --- */
+.error-message {
+    color: #D32F2F; 
+    font-size: 0.9em;
+    margin: 5px 0 15px 0;
+    display: none; 
+}
+
+.input-error {
+    border-color: #D32F2F !important;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    flex: 1; 
+    margin: 0 5px;
+    transition: background-color 0.2s;
+}
+
+.buttons button:first-child { margin-left: 0; }
+.buttons button:last-child { margin-right: 0; }
+
+/* --- ASIGNACIÓN DE COLORES A BOTONES --- */
+#guardarBtn { 
+    background-color: #0D47A1; 
+}
+#guardarBtn:hover { 
+    background-color: #42A5F5; 
+}
+
+#verDatosBtn { 
+    background-color: #42A5F5; 
+}
+#verDatosBtn:hover { 
+    background-color: #0D47A1; 
+}
+
+#limpiarFormBtn { 
+    background-color: #F44336; 
+}
+#limpiarFormBtn:hover { 
+    background-color: #D32F2F; 
+}
+
+#borrarDatosBtn { 
+    background-color: #D32F2F; 
+}
+#borrarDatosBtn:hover { 
+    background-color: #F44336; 
+}
+
+/* --- ESTILOS DE VISUALIZACIÓN DE DATOS --- */
+.data-display {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+.data-display h3 {
+    color: #0D47A1; 
+}
+
+/* --- ESTILOS PARA EL FOOTER (PIE DE PÁGINA) --- */
+.portal-footer {
+    background-color: #333; /* Color oscuro para contraste */
+    color: #fff;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 0.85em;
+    border-top: 5px solid #D32F2F; /* Borde rojo */
+    width: 100%;
+    box-sizing: border-box; 
+    margin-top: auto; /* Empuja el footer hacia abajo si el body es flex */
+}
+
+.portal-footer p {
+    margin: 5px 0;
+}
