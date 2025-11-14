@@ -9,13 +9,12 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #ECEFF1; 
-    /* Ajustes para centrar el contenedor en el flujo normal (no flex) */
     padding: 20px 0; 
     margin: 0;
-    min-height: 100vh; /* Para que el footer se vea bien si hay poco contenido */
+    min-height: 100vh; 
     display: flex;
-    flex-direction: column; /* Asegura que el contenido fluya verticalmente */
-    align-items: center; /* Centra el contenido en el eje horizontal */
+    flex-direction: column; 
+    align-items: center; 
 }
 
 .portal-container {
@@ -25,17 +24,18 @@ body {
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 20px; /* Separación del footer */
+    margin-bottom: 20px; 
 }
 
-/* --- ENCABEZADO (AZUL PRINCIPAL) --- */
+/* --- ENCABEZADO --- */
 .header {
-    background-color: #0D47A1; 
+    background-color: #333; 
     color: white;
     padding: 18px;
     font-size: 1.6em;
     font-weight: bold;
     text-align: center;
+    border-bottom: 5px solid #D32F2F; 
 }
 
 .form-card {
@@ -74,7 +74,8 @@ input[type="number"] {
     color: #D32F2F; 
     font-size: 0.9em;
     margin: 5px 0 15px 0;
-    display: none; 
+    /* IMPORTANTE: Los mensajes de error deben estar ocultos por defecto */
+    display: none !important; 
 }
 
 .input-error {
@@ -102,7 +103,7 @@ input[type="number"] {
 .buttons button:first-child { margin-left: 0; }
 .buttons button:last-child { margin-right: 0; }
 
-/* --- ASIGNACIÓN DE COLORES A BOTONES --- */
+/* --- ASIGNACIÓN DE COLORES A BOTONES DE ACCIÓN --- */
 #guardarBtn { 
     background-color: #0D47A1; 
 }
@@ -110,7 +111,7 @@ input[type="number"] {
     background-color: #42A5F5; 
 }
 
-#verDatosBtn { 
+#verDatosBtn, #verDatosBtn[data-state="ver"] { 
     background-color: #42A5F5; 
 }
 #verDatosBtn:hover { 
@@ -137,22 +138,46 @@ input[type="number"] {
     padding: 20px;
     border-top: 1px solid #ccc;
     background-color: #f9f9f9;
+    display: none; /* OCULTO POR DEFECTO */
 }
 .data-display h3 {
     color: #0D47A1; 
 }
+.usuario {
+    padding: 10px 0;
+}
+.usuario p {
+    margin: 3px 0;
+}
+
+/* ESTILO DEL BOTÓN DE BORRADO INDIVIDUAL */
+.btn-borrar-individual {
+    background-color: #D32F2F; 
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+.btn-borrar-individual:hover {
+    background-color: #F44336;
+}
+
 
 /* --- ESTILOS PARA EL FOOTER (PIE DE PÁGINA) --- */
 .portal-footer {
-    background-color: #333; /* Color oscuro para contraste */
+    background-color: #333; 
     color: #fff;
     padding: 15px 20px;
     text-align: center;
     font-size: 0.85em;
-    border-top: 5px solid #D32F2F; /* Borde rojo */
+    border-top: 5px solid #D32F2F; 
     width: 100%;
     box-sizing: border-box; 
-    margin-top: auto; /* Empuja el footer hacia abajo si el body es flex */
+    margin-top: auto; 
 }
 
 .portal-footer p {
