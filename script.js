@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ====================================
-    // 1. OBTENCIÓN DE REFERENCIAS AL DOM (ADAPTADAS A TU HTML)
+    // 1. OBTENCIÓN DE REFERENCIAS AL DOM
     // ====================================
     const form = document.getElementById('userForm');
     const dataDisplay = document.getElementById('dataDisplay'); 
@@ -40,14 +40,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Función de Validación del formulario
+    // Función de Validación del formulario (MODIFICADA)
     function validarFormulario() {
         let isValid = true;
+        let allInputsEmpty = true; // Nuevo: Flag para formulario completamente vacío
 
-        // 1. Limpiar todos los errores
+        // 1. Limpiar todos los errores y verificar si hay contenido
         Object.keys(inputs).forEach(key => {
             toggleError(inputs[key], errors[key], false);
+            // Si algún campo tiene contenido, el formulario no está vacío
+            if (inputs[key].value.trim() !== '') {
+                allInputsEmpty = false;
+            }
         });
+
+        // 1.1. NUEVA VALIDACIÓN REQUERIDA: Si todos los campos están vacíos
+        if (allInputsEmpty) {
+            alert('❌ No puedes guardar. El formulario está completamente vacío. Por favor, ingresa tus datos.');
+            return false;
+        }
 
         // 2. Validar Nombre
         if (inputs.nombre.value.trim() === '') {
@@ -133,9 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 // Simula un clic para que la función toggle decida si mostrar o no
                 btnVerOcultar.click(); 
-                
-                // Si la lista quedó vacía, el toggle ya se encarga de poner 'Ver Datos'.
-                // Si no quedó vacía, el toggle la muestra y pone 'Ocultar Datos'.
             }, 10); 
         }
     };
