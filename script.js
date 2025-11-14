@@ -20,78 +20,113 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Referencias a los botones
-    const btnGuardar = document.getElementById('guardarBtn'); // Guardar
-    const btnVerOcultar = document.getElementById('verDatosBtn'); // Ver/Ocultar
-    const btnLimpiarForm = document.getElementById('limpiarFormBtn'); // Limpiar Form
-    const btnBorrarDatos = document.getElementById('borrarDatosBtn'); // Borrar Todos
+    const btnGuardar = document.getElementById('guardarBtn');
+    const btnVerOcultar = document.getElementById('verDatosBtn');
+    const btnLimpiarForm = document.getElementById('limpiarFormBtn');
+    const btnBorrarDatos = document.getElementById('borrarDatosBtn');
 
     // ====================================
     // 2. FUNCIONES DE UTILIDAD Y CORE
     // ====================================
 
-    // Función para mostrar/ocultar errores en los campos
-    function toggleError(inputElement, errorElement, isVisible) {
+    /**
+     * Muestra u oculta el mensaje de error y aplica estilos al input.
+     * @param {HTMLElement} inputElement - El input a afectar.
+     * @param {HTMLElement} errorElement - El elemento donde se muestra el mensaje.
+     * @param {boolean} isVisible - Si el error debe ser visible.
+     * @param {string} message - El mensaje de error a mostrar.
+     */
+    function toggleError(inputElement, errorElement, isVisible, message = '') {
         if (isVisible) {
             inputElement.classList.add('input-error');
+            errorElement.textContent = message; // Asigna el mensaje de error
             errorElement.style.display = 'block';
         } else {
             inputElement.classList.remove('input-error');
+            errorElement.textContent = ''; // Limpia el mensaje
             errorElement.style.display = 'none';
         }
     }
 
-    // Función de Validación del formulario (Incluye validación para formulario completamente vacío)
-    function validarFormulario() {
+    /**
+     * Valida un campo individualmente y muestra/oculta su error.
+     * @param {string} campo - El nombre del campo ('nombre', 'email', 'edad').
+     * @returns {boolean} - True si el campo es válido, False si no lo es.
+     */
+    function validarCampo(campo) {
         let isValid = true;
-        let allInputsEmpty = true; 
+        const inputElement = inputs[campo];
+        const errorElement = errors[campo];
+        const value = inputElement.value.trim();
 
-        // 1. Limpiar todos los errores y verificar si hay contenido
-        Object.keys(inputs).forEach(key => {
-            toggleError(inputs[key], errors[key], false);
-            // Si algún campo tiene contenido, el formulario no está vacío
-            if (inputs[key].value.trim() !== '') {
-                allInputsEmpty = false;
-            }
-        });
+        // Limpiar error anterior antes de validar
+        toggleError(inputElement, errorElement, false);
 
-        // 1.1. VALIDACIÓN: Si todos los campos están vacíos
-        if (allInputsEmpty) {
-            alert('❌ No puedes guardar. El formulario está completamente vacío. Por favor, ingresa tus datos.');
-            return false;
-        }
-
-        // 2. Validar Nombre
-        if (inputs.nombre.value.trim() === '') {
-            toggleError(inputs.nombre, errors.nombre, true);
-            errors.nombre.textContent = 'El nombre es obligatorio.';
-            isValid = false;
-        }
-
-        // 3. Validar Email
-        const emailValue = inputs.email.value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailValue === '') {
-            toggleError(inputs.email, errors.email, true);
-            errors.email.textContent = 'El email es obligatorio.';
-            isValid = false;
-        } else if (!emailRegex.test(emailValue)) {
-            toggleError(inputs.email, errors.email, true);
-            errors.email.textContent = 'El formato del email no es válido.';
-            isValid = false;
-        }
-
-        // 4. Validar Edad
-        const edadValue = parseInt(inputs.edad.value.trim());
-        if (inputs.edad.value.trim() === '' || isNaN(edadValue) || edadValue < 1) {
-            toggleError(inputs.edad, errors.edad, true);
-            errors.edad.textContent = 'La edad debe ser un número positivo (mínimo 1).';
-            isValid = false;
+        switch (campo) {
+            case 'nombre':
+                if (value === '') {
+                    toggleError(inputElement, errorElement, true, 'Debes ingresar tu nombre.');
+                    isValid = false;
+                }
+                break;
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (value === '') {
+                    toggleError(inputElement, errorElement, true, 'El email debe ser Válido.');
+                    isValid = false;
+                } else if (!emailRegex.test(value)) {
+                    toggleError(inputElement, errorElement, true, 'El formato del email no es válido.');
+                    isValid = false;
+                }
+                break;
+            case 'edad':
+                const edadValue = parseInt(value);
+                // Permite cadena vacía para que el formulario completo no lo marque como error si está vacío.
+                if (value === '') {
+                    toggleError(inputElement, errorElement, true, 'Debes ingresar tu edad.');
+                    isValid = false;
+                } else if (isNaN(edadValue) || edadValue < 1 || !Number.isInteger(edadValue)) {
+                    toggleError(inputElement, errorElement, true, 'La edad debe ser un número entero positivo (mínimo 1).');
+                    isValid = false;
+                }
+                break;
         }
 
         return isValid;
     }
 
-    // Lógica para limpiar el formulario (con alerta condicional)
+    /**
+     * Función principal de Validación del formulario al hacer Submit.
+     * Valida todos los campos y muestra los errores individuales.
+     * @returns {boolean} - True si todo el formulario es válido.
+     */
+    function validarFormulario() {
+        let isValid = true;
+        let allInputsEmpty = true;
+        
+        // 1. Validar cada campo individualmente y actualizar el estado general
+        // Esta es la parte crucial que hace aparecer los mensajes de error
+        Object.keys(inputs).forEach(key => {
+            // Llama a la validación individual, que muestra el error si lo hay
+            if (!validarCampo(key)) { 
+                isValid = false; 
+            }
+            // Chequeo de contenido para la alerta de formulario vacío
+            if (inputs[key].value.trim() !== '') {
+                allInputsEmpty = false;
+            }
+        });
+
+        // 2. Alerta de formulario completamente vacío
+        if (allInputsEmpty && !isValid) {
+             alert('❌ No puedes guardar. El formulario está completamente vacío. Por favor, ingresa tus datos.');
+             return false;
+        }
+
+        return isValid;
+    }
+
+    // Lógica para limpiar el formulario
     const limpiarFormulario = (mostrarAlerta = true) => {
         let debeLimpiar = false;
         
@@ -107,13 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
         } else {
-            debeLimpiar = true; // Si se llama al guardar, siempre limpiamos
+            debeLimpiar = true; // Si se llama al guardar, siempre limpiamos (silenciosamente)
         }
 
         // 2. Proceder a la limpieza
         form.reset();
         Object.keys(inputs).forEach(key => {
-            toggleError(inputs[key], errors[key], false);
+            toggleError(inputs[key], errors[key], false); // Limpia los estilos de error
         });
         
         // 3. Mostrar alerta solo si se solicitó
@@ -131,34 +166,26 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (index >= 0 && index < listaUsuarios.length) {
             const nombreUsuario = listaUsuarios[index].nombre;
-            
-            // Eliminar el usuario en la posición 'index'
             listaUsuarios.splice(index, 1);
-            
-            // Guardar la nueva lista en LocalStorage
             localStorage.setItem("usuarios", JSON.stringify(listaUsuarios));
             
             alert(`🗑 Usuario ${nombreUsuario} borrado correctamente. La lista ha sido reordenada.`);
             
-            // Re-renderizar la lista (forzando el toggle)
-            setTimeout(() => {
-                // Simula un clic para que la función toggle decida si mostrar o no
-                btnVerOcultar.click(); 
-            }, 10); 
+            // Re-renderizar la lista
+            setTimeout(toggleMostrarDatos, 10); 
         }
     };
 
-
     // Función principal para mostrar/ocultar datos (toggle)
     const toggleMostrarDatos = () => {
-        // >>>>> BLOQUE DE OCULTAR (Si ya está visible) <<<<<
-        if (dataDisplay.style.display === 'block' && dataDisplay.innerHTML.trim() !== '') {
+        // Bloque de OCULTAR
+        if (dataDisplay.style.display === 'block') {
             dataDisplay.style.display = 'none';
-            btnVerOcultar.textContent = 'Ver Datos'; // Cambiar a 'Ver Datos'
+            btnVerOcultar.textContent = 'Ver Datos';
             return;
         }
 
-        // >>>>> BLOQUE DE MOSTRAR (Si está oculto) <<<<<
+        // Bloque de MOSTRAR
         const dataString = localStorage.getItem('usuarios'); 
         dataDisplay.innerHTML = ''; 
 
@@ -185,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 dataDisplay.innerHTML = htmlResultado;
                 dataDisplay.style.display = 'block'; 
-                btnVerOcultar.textContent = 'Ocultar Datos'; // Cambiar a 'Ocultar Datos'
+                btnVerOcultar.textContent = 'Ocultar Datos';
                 
                 // Asignar eventos a los nuevos botones de borrado individual
                 document.querySelectorAll('.btn-borrar-individual').forEach(button => {
@@ -196,13 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 
             } else {
-                // Lista existe pero está vacía
                 dataDisplay.style.display = 'none'; 
                 btnVerOcultar.textContent = 'Ver Datos';
                 alert('La lista de usuarios está vacía.');
             }
         } else {
-            // Lista no existe en LocalStorage
             dataDisplay.style.display = 'none'; 
             btnVerOcultar.textContent = 'Ver Datos';
             alert('No se encontró la lista de usuarios en LocalStorage.');
@@ -214,11 +239,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. ASIGNACIÓN DE EVENTOS
     // ====================================
 
-    // EVENTO 1: Guardar datos (Submit del Formulario) - MODIFICADO para auto-refresco
+    // EVENTOS PARA VALIDACIÓN INDIVIDUAL (al salir del campo - on blur)
+    Object.keys(inputs).forEach(key => {
+        inputs[key].addEventListener('blur', () => validarCampo(key)); 
+    });
+    
+    // EVENTO 1: Guardar datos (Submit del Formulario)
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
+        // 1. Al llamar a validarFormulario(), se validan y se muestran los errores
         if (validarFormulario()) {
+            // Solo si es válido, se procede a guardar
             let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 
             const nuevoUsuario = {
@@ -230,24 +262,16 @@ document.addEventListener('DOMContentLoaded', () => {
             usuarios.push(nuevoUsuario);
             localStorage.setItem('usuarios', JSON.stringify(usuarios));
 
-            // 1. Alerta de guardado
+            // Alerta y limpieza
             alert('✅ Usuario guardado correctamente.');
-
-            // 2. Limpieza silenciosa
             limpiarFormulario(false);
             
-            // 3. Lógica para refrescar/actualizar la lista de datos si está visible (CAMBIO APLICADO)
+            // Refrescar la lista si está visible
             if (dataDisplay.style.display === 'block') {
-                // Paso A: Ocultamos el display, preparando el escenario para el toggle (refresco)
                 dataDisplay.style.display = 'none'; 
                 btnVerOcultar.textContent = 'Ver Datos';
-                
-                // Paso B: Llamamos a la función para que recargue y muestre con los nuevos datos.
-                // Usamos setTimeout para asegurar que el DOM se actualice antes de re-renderizar.
                 setTimeout(toggleMostrarDatos, 50); 
-                
             } else {
-                // Si estaba oculta, solo nos aseguramos de que el botón diga 'Ver Datos'
                 dataDisplay.style.display = 'none';
                 btnVerOcultar.textContent = 'Ver Datos'; 
             }

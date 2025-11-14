@@ -1,9 +1,9 @@
 /* Paleta de Colores:
-   Azul Principal: #0D47A1
-   Azul Secundario: #42A5F5
-   Rojo Principal (Destructivo): #D32F2F
-   Rojo Secundario (Alerta): #F44336
-   Fondo: #ECEFF1
+    Azul Principal: #0D47A1
+    Azul Secundario: #42A5F5
+    Rojo Principal (Destructivo): #D32F2F
+    Rojo Secundario (Alerta): #F44336
+    Fondo: #ECEFF1
 */
 
 body {
@@ -50,6 +50,12 @@ body {
     font-size: 1.4em;
 }
 
+/* Contenedor de input + label + error para mejor control de flujo */
+.form-card > div {
+    /* Opcional: Para asegurar que el mensaje de error se muestre en su propia línea */
+    display: block; 
+}
+
 label {
     display: block;
     margin-top: 15px;
@@ -69,18 +75,28 @@ input[type="number"] {
     transition: border-color 0.3s;
 }
 
-/* --- ESTILOS DE ERROR (ROJO) --- */
+---
+
+/* --- ESTILOS DE ERROR CORREGIDOS --- */
+
 .error-message {
-    color: #D32F2F; 
+    color: #D32F2F; /* Rojo Destructivo */
     font-size: 0.9em;
     margin: 5px 0 15px 0;
-    /* IMPORTANTE: Los mensajes de error deben estar ocultos por defecto */
-    display: none !important; 
+    /* CORRECCIÓN CLAVE: Quitamos !important para que JS pueda cambiar el display */
+    display: none; 
 }
 
 .input-error {
-    border-color: #D32F2F !important;
+    border-color: #D32F2F !important; /* Mantenemos !important aquí para que el borde siempre cambie */
 }
+
+/* Opcional pero recomendado: Asegurar que cuando JS lo muestre, ocupe el espacio correcto */
+.error-message[style*="display: block"] {
+    display: block !important;
+}
+
+---
 
 .buttons {
     display: flex;
