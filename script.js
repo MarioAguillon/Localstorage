@@ -40,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Función de Validación del formulario (MODIFICADA)
+    // Función de Validación del formulario (Incluye validación para formulario completamente vacío)
     function validarFormulario() {
         let isValid = true;
-        let allInputsEmpty = true; // Nuevo: Flag para formulario completamente vacío
+        let allInputsEmpty = true; 
 
         // 1. Limpiar todos los errores y verificar si hay contenido
         Object.keys(inputs).forEach(key => {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 1.1. NUEVA VALIDACIÓN REQUERIDA: Si todos los campos están vacíos
+        // 1.1. VALIDACIÓN: Si todos los campos están vacíos
         if (allInputsEmpty) {
             alert('❌ No puedes guardar. El formulario está completamente vacío. Por favor, ingresa tus datos.');
             return false;
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. ASIGNACIÓN DE EVENTOS
     // ====================================
 
-    // EVENTO 1: Guardar datos (Submit del Formulario)
+    // EVENTO 1: Guardar datos (Submit del Formulario) - MODIFICADO para auto-refresco
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -236,9 +236,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // 2. Limpieza silenciosa
             limpiarFormulario(false);
             
-            // 3. Ocultar la lista (por si estaba visible) y resetear botón
-            dataDisplay.style.display = 'none'; 
-            btnVerOcultar.textContent = 'Ver Datos'; 
+            // 3. Lógica para refrescar/actualizar la lista de datos si está visible (CAMBIO APLICADO)
+            if (dataDisplay.style.display === 'block') {
+                // Paso A: Ocultamos el display, preparando el escenario para el toggle (refresco)
+                dataDisplay.style.display = 'none'; 
+                btnVerOcultar.textContent = 'Ver Datos';
+                
+                // Paso B: Llamamos a la función para que recargue y muestre con los nuevos datos.
+                // Usamos setTimeout para asegurar que el DOM se actualice antes de re-renderizar.
+                setTimeout(toggleMostrarDatos, 50); 
+                
+            } else {
+                // Si estaba oculta, solo nos aseguramos de que el botón diga 'Ver Datos'
+                dataDisplay.style.display = 'none';
+                btnVerOcultar.textContent = 'Ver Datos'; 
+            }
         }
     });
 
